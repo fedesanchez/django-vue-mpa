@@ -1,0 +1,10 @@
+<!-- {% load static %}
+<link rel="stylesheet" href="{% static 'src/css/styles.css' %}"> -->
+{% load django_vite %}
+{% vite_hmr_client %}
+{% vite_asset 'js/main.js' %}
+
+<body>
+    {% block content %}
+    {% endblock %}
+</body>
