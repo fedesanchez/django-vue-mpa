@@ -1,9 +1,9 @@
 import vue from "@vitejs/plugin-vue";
-
+import dynaminImport from "vite-plugin-dynamic-import";
 const { resolve } = require("path");
 
 module.exports = {
-	plugins: [vue()],
+	plugins: [vue(), dynaminImport()],
 	root: resolve("./static/src"),
 	base: "/static/",
 	server: {
@@ -16,7 +16,10 @@ module.exports = {
 		},
 	},
 	resolve: {
-		extensions: [".js", ".json"],
+		extensions: [".js", ".json", ".vue"],
+		alias: {
+			"@": resolve(__dirname, "./static/src/js"),
+		},
 	},
 	build: {
 		outDir: resolve("./static/dist"),
@@ -29,7 +32,7 @@ module.exports = {
 				main: resolve("./static/src/js/main.js"),
 			},
 			output: {
-				chunkFileNames: undefined,
+				chunkFileNames: "./static/src/js/[name].js?id=[chunkHash]",
 			},
 		},
 	},

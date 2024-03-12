@@ -2,5 +2,5 @@ from django.urls import path
 from dashboard.views import index
 
 urlpatterns = [
-    path('', index, name="index")
+    path('<page>', index, name="index")
 ]

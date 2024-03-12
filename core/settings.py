@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'inertia',
     'dashboard',
     'django_vite',
 ]
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'inertia.middleware.InertiaMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -137,3 +139,10 @@ STATIC_ROOT = BASE_DIR / "collectedstatic"
 # Include DJANGO_VITE_ASSETS_PATH into STATICFILES_DIRS to be copied inside
 # when run command python manage.py collectstatic
 STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
+
+# INERTIA
+#INERTIA_VERSION = '1.0' # defaults to '1.0'
+INERTIA_LAYOUT = 'base.html' # required and has no default
+#INERTIA_JSON_ENCODER = CustomJsonEncoder # defaults to inertia.utils.InertiaJsonEncoder
+#INERTIA_SSR_URL = 'http://localhost:13714' # defaults to http://localhost:13714
+#INERTIA_SSR_ENABLED = False # defaults to False
