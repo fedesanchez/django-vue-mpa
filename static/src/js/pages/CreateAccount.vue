@@ -4,6 +4,7 @@ import ImageLight from '../assets/img/create-account-office.jpeg'
 import ImageDark from '../assets/img/create-account-office-dark.jpeg'
 import { GithubIcon, TwitterIcon } from '../icons'
 import { Input, Label, Button } from '@/components/ui'
+
 </script>
 
 <template>

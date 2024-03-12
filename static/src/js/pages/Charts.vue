@@ -32,10 +32,14 @@ ChartJS.register(
   LineElement,
   BarElement
 )
+const props = defineProps({
+  routes: Array,
+  user: Object
+})
 </script>
 
 <template>
-  <Layout>
+  <Layout :routes="routes" :user="user">
     <PageTitle>Charts</PageTitle>
     <div class="grid gap-6 mb-8 md:grid-cols-2">
       <ChartCard title="Lines">

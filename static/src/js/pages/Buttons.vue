@@ -4,10 +4,14 @@ import PageTitle from '@/components/Typography/PageTitle.vue'
 import SectionTitle from '@/components/Typography/SectionTitle.vue'
 import CTA from '@/components/CTA.vue'
 import Button from '@/components/ui/Button.vue'
+const props = defineProps({
+  routes: Array,
+  user: Object
+})
 </script>
 
 <template>
-  <Layout>
+  <Layout :routes="routes" :user="user">
     <PageTitle>Buttons</PageTitle>
 
     <CTA />

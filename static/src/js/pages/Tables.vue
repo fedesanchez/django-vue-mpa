@@ -78,10 +78,15 @@ dataTable2.value = response2.slice(
   (pageTable2.value - 1) * resultsPerPage,
   pageTable2.value * resultsPerPage
 )
+
+const props = defineProps({
+  routes: Array,
+  user: Object
+})
 </script>
 
 <template>
-  <Layout>
+  <Layout :routes="routes" :user="user">
     <PageTitle>Tables</PageTitle>
     <CTA />
 

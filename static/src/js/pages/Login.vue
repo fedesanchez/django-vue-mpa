@@ -1,9 +1,10 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
-import ImageLight from '../assets/img/login-office.jpeg'
-import ImageDark from '../assets/img/login-office-dark.jpeg'
+import ImageLight from '@/assets/img/login-office.jpeg'
+import ImageDark from '@/assets/img/login-office-dark.jpeg'
 import { GithubIcon, TwitterIcon } from '@/icons'
 import { Label, Input, Button } from '@/components/ui'
+
 </script>
 
 <template>

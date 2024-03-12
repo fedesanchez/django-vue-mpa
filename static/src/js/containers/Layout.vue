@@ -1,7 +1,16 @@
 <script setup>
+import { provide } from 'vue'
 import LayoutHeader from '../components/Header.vue'
 import Sidebar from '../components/Sidebar/index.vue'
 import Main from '../containers/Main.vue'
+
+const props = defineProps({
+  routes: Array,
+  user: Object
+})
+
+provide('routes', props.routes)
+provide('user', props.user)
 </script>
 
 <template>

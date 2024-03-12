@@ -5,10 +5,14 @@ import SectionTitle from '@/components/Typography/SectionTitle.vue'
 import CTA from '@/components/CTA.vue'
 import { MailIcon } from '@/icons'
 import { Button, Label, Input, Select, Textarea, HelperText } from '@/components/ui'
+const props = defineProps({
+  routes: Array,
+  user: Object
+})
 </script>
 
 <template>
-  <Layout>
+  <Layout :routes="routes" :user="user">
     <PageTitle>Forms</PageTitle>
     <CTA />
     <SectionTitle>Elements</SectionTitle>

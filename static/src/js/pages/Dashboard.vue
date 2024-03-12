@@ -1,9 +1,9 @@
 <script setup>
 import Layout from '@/containers/Layout.vue'
 import { ref, watch } from 'vue'
-import CTA from '../components/CTA.vue'
-import InfoCard from '../components/Cards/InfoCard.vue'
-import ChartCard from '../components/Chart/ChartCard.vue'
+import CTA from '@/components/CTA.vue'
+import InfoCard from '@/components/Cards/InfoCard.vue'
+import ChartCard from '@/components/Chart/ChartCard.vue'
 import {
   Chart as ChartJS,
   ArcElement,
@@ -14,10 +14,10 @@ import {
   LineElement
 } from 'chart.js'
 import { Doughnut, Line } from 'vue-chartjs'
-import ChartLegend from '../components/Chart/ChartLegend.vue'
-import PageTitle from '../components/Typography/PageTitle.vue'
+import ChartLegend from '@/components/Chart/ChartLegend.vue'
+import PageTitle from '@/components/Typography/PageTitle.vue'
 import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '@/icons'
-import RoundIcon from '../components/RoundIcon.vue'
+import RoundIcon from '@/components/RoundIcon.vue'
 import response from '@/utils/demo/tableData'
 import {
   TableBody,
@@ -55,10 +55,15 @@ watch(page, () => {
 data.value = response.slice((page.value - 1) * resultsPerPage, page.value * resultsPerPage)
 
 ChartJS.register(ArcElement, Tooltip, CategoryScale, LinearScale, PointElement, LineElement)
+
+const props = defineProps({
+  routes: Array,
+  user: Object
+})
 </script>
 
 <template>
-  <Layout>
+  <Layout :routes="routes" :user="user">
     <PageTitle>Dashboard</PageTitle>
 
     <CTA />
@@ -120,7 +125,7 @@ ChartJS.register(ArcElement, Tooltip, CategoryScale, LinearScale, PointElement, 
           <TableRow v-for="(user, index) in data" :key="index">
             <TableCell>
               <div class="flex items-center text-sm">
-                <Avatar class="hidden mr-3 md:block" src="{{user.avatar}}" alt="User image" />
+                <Avatar class="hidden mr-3 md:block" :src="user.avatar" alt="User image" />
                 <div>
                   <p class="font-semibold">{{ user.name }}</p>
                   <p class="text-xs text-gray-600 dark:text-gray-400">{{ user.job }}</p>

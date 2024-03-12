@@ -2,6 +2,7 @@
 import ImageLight from '../assets/img/forgot-password-office.jpeg'
 import ImageDark from '../assets/img/forgot-password-office-dark.jpeg'
 import { Label, Input, Button } from '@/components/ui'
+
 </script>
 
 <template>

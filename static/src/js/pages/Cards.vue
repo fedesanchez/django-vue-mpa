@@ -8,10 +8,14 @@ import Card from '@/components/Cards/Card.vue'
 import CardBody from '@/components/Cards/CardBody.vue'
 import { CartIcon, ChatIcon, MoneyIcon, PeopleIcon } from '@/icons'
 import RoundIcon from '@/components/RoundIcon.vue'
+const props = defineProps({
+  routes: Array,
+  user: Object
+})
 </script>
 
 <template>
-  <Layout>
+  <Layout :routes="routes" :user="user">
     <PageTitle>Cards</PageTitle>
 
     <CTA />

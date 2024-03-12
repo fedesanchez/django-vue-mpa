@@ -1,8 +1,9 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
+import { inject } from 'vue'
 import SidebarSubmenu from './SidebarSubmenu.vue'
-import routes from '../../router/sidebar.js'
 import { Icon, Button } from '../ui/'
+const routes = inject('routes')
 </script>
 
 <template>

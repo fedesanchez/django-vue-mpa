@@ -18,10 +18,15 @@ function openModal() {
 function closeModal() {
   isModalOpen.value = false
 }
+
+const props = defineProps({
+  routes: Array,
+  user: Object
+})
 </script>
 
 <template>
-  <Layout>
+  <Layout :routes="routes" :user="user">
     <PageTitle>Modals</PageTitle>
     <CTA />
 
