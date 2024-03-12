@@ -11,6 +11,8 @@ You don't have to build a separate app to use Vue with Django](https://ctrlzblog
 
 The goal is to have the same benefits as if we were using _Django Template Engine_ but with a modern frontend framework like vue.
 
+It has to have this features:
+
 -   1. Being able to use a base layout (Header, Footer, Sidebar...)
 -   2. Individual views within the layout, with parameters or props.
 -   3. Have a unified routing system (django).
@@ -20,7 +22,8 @@ The goal is to have the same benefits as if we were using _Django Template Engin
 
 ### 1. Being able to use a base layout.
 
-_First: The setup_
+**First: The setup**
+
 Taking the aforementioned article as a reference, I am going to use Vue as a frontend framework using Vite and django_vite.
 
 I'm going to try to integrate this [vue dashboard template](https://github.com/fedesanchez/windmill-dashboard-vue) with django, wich also has tailwind and other dependencies.
@@ -44,8 +47,9 @@ STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
 ```
 
 -   Copy src folder from [vue dashboard template](https://github.com/fedesanchez/windmill-dashboard-vue) to static/src/js
--   Add a package.json, vite.config.cjs and tailwind.config.js, postcss.config.cjs for tailwind. Just copy the files in this repo and make sure that the path of your static folder its right.
-    The most important part is to define main.js as the entrypoint in vite.config.js
+-   Add a [package.json](), [vite.config.cjs]() and tailwind.[config.js](), [postcss.config.cjs]() for tailwind. Just copy the files in this repo and make sure that the path of your static folder its right.
+
+The most important part is to define [main.js]() as the entrypoint in [vite.config.js]()
 
 ```js
 input: {
@@ -53,7 +57,7 @@ input: {
 },
 ```
 
-Just run npm and check
+Then just run npm install and check for errors
 
 ### The problem:
 
@@ -88,7 +92,7 @@ INERTIA_LAYOUT = 'base.html'
 npm install @inertiajs/vue3
 ```
 
--   And change the content of main.js to:
+-   And change the content of [main.js]() to:
 
 ```js
 import "./index.css";
@@ -108,19 +112,19 @@ createInertiaApp({
 });
 ```
 
--   Now we need to replace _RouterLink_ (vue-router) to _Link_ (inertia) on a few components (Sidebar, Login, CreateAccount)
--   Then we need to import Layout component on every .vue file inside static/src/js/pages folder and wrap de content inside Layout, for instance:
+-   Now we need to replace **RouterLink** (vue-router) to **Link** (inertia) on a few components (Sidebar, Login, CreateAccount)
+-   Then we need to import Layout component on every .vue file inside [static/src/js/pages]() folder and wrap the content inside Layout, for instance:
 
-```js
+```html
 <script setup>
-import Layout from '@/containers/Layout.vue'
-import PageTitle from '@/components/Typography/PageTitle.vue'
+	import Layout from "@/containers/Layout.vue";
+	import PageTitle from "@/components/Typography/PageTitle.vue";
 </script>
 
 <template>
-  <Layout>
-     <PageTitle>Blank</PageTitle>
-  </Layout>
+	<Layout>
+		<PageTitle>Blank</PageTitle>
+	</Layout>
 </template>
 ```
 
@@ -130,35 +134,44 @@ import PageTitle from '@/components/Typography/PageTitle.vue'
 npm install @inertiajs/vue3
 ```
 
--   Finally we can add a url + view in django that points to any of our vue pages file'
+-   Finally we can add a view in django that points to any of our vue pages file'
 
 ```python
 #core/urls.py
+
 from django.urls import path
 from dashboard.views import index
 
 urlpatterns = [
     path('<page>', index, name="index")
 ]
+```
 
+```python
 #dashboard/urls.py
+
 from django.urls import path
 from dashboard.views import index
 
 urlpatterns = [
     path('<page>', index, name="index")
 ]
+```
 
+We need to use **render** from inertia instead of django!
+
+```python
 #dahboard/views.py
+
 from inertia import render #important!
 
 def index(request, page):
     return render(request, page, props={})
 ```
 
--   Now you can go to localhost:8000/app/Blank and everything should look fine.
+-   Now you can go to any vue page like [localhost:8000/app/Blank]() and everything should look fine.
 
-**NOTICE:** the name of the page param should match to the name of the file .vue
+**NOTICE:** the name of the page param should match to the name of the file .vue. We are going ti chabge that later.
 
 ### 2. Individual views within the layout, with parameters or props.
 
