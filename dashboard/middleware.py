@@ -13,7 +13,7 @@ def inertia_share(get_response):
             )
         else:
             return dict(
-                name=item.get("name"), routes=[get_route(i) for i in item.get("routes")]
+                name=item.get("name"), icon=item.get("icon"), routes=[get_route(i) for i in item.get("routes")]
             )
 
     sidebar = [
@@ -47,6 +47,7 @@ def inertia_share(get_response):
         },
         {
             "name": "Pages",
+            "icon": 'PagesIcon',
             "routes": [
                 {
                     "name": "Login",
