@@ -1,12 +1,18 @@
+from django.core.paginator import Paginator
 from inertia import render
+from .models import Client
 
+PAGINATE_BY = 10
 
 def index(request):
     return render(request, "Dashboard", props={})
 
-
 def dashboard(request):
-    return render(request, "Dashboard", props={})
+    client_list = Client.objects.all()
+    paginator = Paginator(client_list, PAGINATE_BY) 
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)    
+    return render(request, "Dashboard", props={"page_obj": page_obj})
 
 
 def forms(request):

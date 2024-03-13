@@ -1,6 +1,5 @@
 <script setup>
 import Layout from '@/containers/Layout.vue'
-import { ref, watch } from 'vue'
 import CTA from '@/components/CTA.vue'
 import InfoCard from '@/components/Cards/InfoCard.vue'
 import ChartCard from '@/components/Chart/ChartCard.vue'
@@ -18,7 +17,6 @@ import ChartLegend from '@/components/Chart/ChartLegend.vue'
 import PageTitle from '@/components/Typography/PageTitle.vue'
 import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '@/icons'
 import RoundIcon from '@/components/RoundIcon.vue'
-import response from '@/utils/demo/tableData'
 import {
   TableBody,
   TableContainer,
@@ -34,32 +32,26 @@ import {
 
 import { doughnutOptions, lineOptions, doughnutLegends, lineLegends } from '@/utils/demo/chartsData'
 
-const page = ref(1)
-const data = ref([])
-
-// pagination setup
-const resultsPerPage = 10
-const totalResults = response.length
-
-// pagination change control
-function onPageChange(p) {
-  page.value = p
-}
-
-// on page change, load new sliced data
-// here you would make another server request for new data
-watch(page, () => {
-  data.value = response.slice((page.value - 1) * resultsPerPage, page.value * resultsPerPage)
-})
-//Initializa data (For some reason watch inmediate:true dosent work )
-data.value = response.slice((page.value - 1) * resultsPerPage, page.value * resultsPerPage)
-
 ChartJS.register(ArcElement, Tooltip, CategoryScale, LinearScale, PointElement, LineElement)
 
 const props = defineProps({
   routes: Array,
-  user: Object
+  user: Object,
+  page_obj: Object
 })
+
+const pagination = {
+  has_previous: props.page_obj.has_previous,
+  previous_page_number: props.page_obj.previous_page_number,
+  active_page: props.page_obj.number,  
+  has_next: props.page_obj.has_next,
+  next_page_number: props.page_obj.next_page_number,
+  start_index: props.page_obj.start_index,
+  end_index: props.page_obj.end_index,
+  num_pages: props.page_obj.paginator.num_pages,
+  per_page: props.page_obj.paginator.per_page,
+  count: props.page_obj.paginator.count
+}
 </script>
 
 <template>
@@ -122,7 +114,7 @@ const props = defineProps({
           </tr>
         </TableHeader>
         <TableBody>
-          <TableRow v-for="(user, index) in data" :key="index">
+          <TableRow v-for="(user, index) in page_obj.object_list" :key="index">
             <TableCell>
               <div class="flex items-center text-sm">
                 <Avatar class="hidden mr-3 md:block" :src="user.avatar" alt="User image" />
@@ -139,17 +131,14 @@ const props = defineProps({
               <Badge :type="user.status">{{ user.status }}</Badge>
             </TableCell>
             <TableCell>
-              <span class="text-sm">{{ new Date(user.date).toLocaleDateString() }}</span>
+              <span class="text-sm">{{ user.date }}</span>
             </TableCell>
           </TableRow>
         </TableBody>
       </Table>
       <TableFooter>
         <Pagination
-          :totalResults="totalResults"
-          :resultsPerPage="resultsPerPage"
-          label="Table navigation"
-          :onChange="onPageChange"
+          v-bind="pagination"        
         />
       </TableFooter>
     </TableContainer>

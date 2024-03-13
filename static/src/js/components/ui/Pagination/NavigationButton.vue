@@ -1,8 +1,9 @@
 <script setup>
 import { Button } from '@/components/ui'
+import { Link } from '@inertiajs/vue3'
 
 const props = defineProps({
-  onClick: Function,
+  href: String,
   disabled: Boolean,
   directionIcon: String
 })
@@ -11,12 +12,13 @@ const icon = props.directionIcon === 'prev' ? 'PrevIcon' : 'NextIcon'
 </script>
 
 <template>
-  <Button
-    size="small"
-    layout="link"
-    :icon="icon"
-    @click="onClick"
-    :disabled="disabled"
-    :aria-label="ariaLabel"
-  />
+  <Link :href="href" preserve-scroll>
+    <Button
+      size="small"
+      layout="link"
+      :icon="icon"
+      :disabled="disabled"
+      :aria-label="ariaLabel"
+    />
+  </Link>
 </template>

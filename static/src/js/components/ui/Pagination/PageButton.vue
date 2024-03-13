@@ -1,15 +1,18 @@
 <script setup>
 import { Button } from '@/components/ui'
+import { Link } from '@inertiajs/vue3'
 
 const props = defineProps({
   page: String | Number,
   isActive: { type: Boolean, default: false },
-  onClick: Function
+  href: String
 })
 </script>
 
 <template>
-  <Button size="pagination" :layout="isActive ? 'primary' : 'link'" @click="onClick">
-    {{ page }}
-  </Button>
+  <Link :href="href" preserve-scroll>
+    <Button size="pagination" :layout="isActive ? 'primary' : 'link'">
+      {{ page }}
+    </Button>
+  </Link>
 </template>
