@@ -136,7 +136,7 @@ const props = defineProps({
               <span class="text-sm">$ {{ user.amount }}</span>
             </TableCell>
             <TableCell>
-              <Badge type="{user.status}">{{ user.status }}</Badge>
+              <Badge :type="user.status">{{ user.status }}</Badge>
             </TableCell>
             <TableCell>
               <span class="text-sm">{{ new Date(user.date).toLocaleDateString() }}</span>
