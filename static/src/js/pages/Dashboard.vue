@@ -15,7 +15,7 @@ import {
 import { Doughnut, Line } from 'vue-chartjs'
 import ChartLegend from '@/components/Chart/ChartLegend.vue'
 import PageTitle from '@/components/Typography/PageTitle.vue'
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '@/icons'
+import Icon from "@/components/ui/Icon"
 import RoundIcon from '@/components/RoundIcon.vue'
 import {
   TableBody,
@@ -37,7 +37,8 @@ ChartJS.register(ArcElement, Tooltip, CategoryScale, LinearScale, PointElement, 
 const props = defineProps({
   routes: Array,
   user: Object,
-  page_obj: Object
+  page_obj: Object,
+  cards: Array
 })
 
 const pagination = {
@@ -62,47 +63,22 @@ const pagination = {
 
     <!-- Cards -->
     <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-      <InfoCard title="Total clients" value="6389">
-        <RoundIcon
-          iconColorClass="text-orange-500 dark:text-orange-100"
-          bgColorClass="bg-orange-100 dark:bg-orange-500"
-          class="mr-4"
-        >
-          <PeopleIcon class="w-5 h-5" />
-        </RoundIcon>
-      </InfoCard>
+      
+      <div v-for="(card, index) in cards" :key="index">
+         <InfoCard :title="card.title" :value="`${card.value}`">
+          <RoundIcon
+            :iconColorClass="`text-${card.color}-500 dark:text-${card.color}-100`"
+            :bgColorClass="`bg-${card.color}-100 dark:bg-${card.color}-500`"
+            class="mr-4"
+          >
+            <Icon :icon="card.icon" class="w-5 h-5" />
+          </RoundIcon>
+        </InfoCard>
+      </div>
 
-      <InfoCard title="Account balance" value="$ 46,760.89">
-        <RoundIcon
-          iconColorClass="text-green-500 dark:text-green-100"
-          bgColorClass="bg-green-100 dark:bg-green-500"
-          class="mr-4"
-        >
-          <MoneyIcon class="w-5 h-5" />
-        </RoundIcon>
-      </InfoCard>
-
-      <InfoCard title="New sales" value="376">
-        <RoundIcon
-          iconColorClass="text-blue-500 dark:text-blue-100"
-          bgColorClass="bg-blue-100 dark:bg-blue-500"
-          class="mr-4"
-        >
-          <CartIcon class="w-5 h-5" />
-        </RoundIcon>
-      </InfoCard>
-
-      <InfoCard title="Pending contacts" value="35">
-        <RoundIcon
-          iconColorClass="text-teal-500 dark:text-teal-100"
-          bgColorClass="bg-teal-100 dark:bg-teal-500"
-          class="mr-4"
-        >
-          <ChatIcon class="w-5 h-5" />
-        </RoundIcon>
-      </InfoCard>
     </div>
 
+     <!-- Table -->
     <TableContainer>
       <Table>
         <TableHeader>
@@ -143,7 +119,10 @@ const pagination = {
       </TableFooter>
     </TableContainer>
 
+     <!-- Charts -->
+
     <PageTitle>Charts</PageTitle>
+
     <div class="grid gap-6 mb-8 md:grid-cols-2">
       <ChartCard title="Revenue">
         <Doughnut v-bind="doughnutOptions" />

@@ -1,18 +1,38 @@
 from django.core.paginator import Paginator
+from django.db.models import Sum
 from inertia import render
 from .models import Client
 
 PAGINATE_BY = 10
 
+
 def index(request):
     return render(request, "Dashboard", props={})
 
+
 def dashboard(request):
     client_list = Client.objects.all()
-    paginator = Paginator(client_list, PAGINATE_BY) 
+    q = client_list.aggregate(Sum("amount"))
+    paginator = Paginator(client_list, PAGINATE_BY)
     page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)    
-    return render(request, "Dashboard", props={"page_obj": page_obj})
+    page_obj = paginator.get_page(page_number)
+    cards = [
+        dict(
+            title="Total clients",
+            color="orange",
+            icon="PeopleIcon",
+            value=client_list.count(),
+        ),
+        dict(
+            title="Account balance",
+            color="green",
+            icon="MoneyIcon",
+            value=round(q.get("amount__sum")),
+        ),
+        dict(title="New sales", color="blue", icon="CartIcon", value="376"),
+        dict(title="Pending contacts", color="teal", icon="ChatIcon", value="55"),
+    ]
+    return render(request, "Dashboard", props={"page_obj": page_obj, "cards": cards})
 
 
 def forms(request):

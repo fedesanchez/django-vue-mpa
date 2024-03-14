@@ -17,6 +17,7 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 python manage.py migrate
+python manage.py loaddata dashboard/fixtures.json
 python manage.py runserver
 ```
 
@@ -29,9 +30,25 @@ npm run dev
 
 Then go to [http://localhost:8080/app/](http://localhost:8080/app/)
 
+# Pros and cons
+
+## Pros
+
+    -    Works like a classic server-side rendered application: controllers, database operations, and views are written as before, and JavaScript page components now replace views.
+    -   Inertia completely eliminates the complexity of client-side routing.
+    -   You dont need a client-side state management.
+    -   Can be faster to develop with, since you don't need to build a separate API layer. Also you dont have unused API endpoints.
+    -   Is easy to test server and client integration.
+
+## Cons
+
+    -   You probably will need a custom serializer to handle other classes than QuerySets.
+    -   Not sure if can work with Class Based Views.
+    -   If the intention is to create an app for Android or iOS, the backend API must be recreated.
+
 # The journey (This is a work in progress)
 
-## Necessary Features
+## Things I need to see if they work.
 
 The goal is to have the same benefits as if we were using _Django Template Engine_ but with a modern frontend framework like vue.
 
@@ -189,7 +206,7 @@ from django.urls import path
 from dashboard.views import index
 
 urlpatterns = [
-    path('test', index, name="index")
+    path('', index, name="index")
 ]
 ```
 
@@ -264,3 +281,102 @@ Adding a middleware we can pass data as a prop to every component. In this case 
 ```
 
 In this way we can build our routes array as we like, for instance, it may be a few endpoints that require authentification or a specific user role or permission
+
+## Extra stuff
+
+### Pagination
+
+```python
+#views.py
+def dashboard(request):
+    client_list = Client.objects.all()
+    paginator = Paginator(client_list, PAGINATE_BY)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "Dashboard", props={ "page_obj": page_obj})
+
+```
+
+We can pass any object as prop but in some cases we are going to get **Object of type SomeClass is not JSON serializable** so we need a custom serializer
+
+```python
+class CustomJsonEncoder(DjangoJSONEncoder):
+  def default(self, value):
+    if isinstance(value, models.Model):
+      return model_to_dict(value)
+
+    if isinstance(value, QuerySet):
+      return [model_to_dict(model) for model in value]
+
+    if isinstance(value, Page):
+      return dict(
+          object_list=[model_to_dict(model) for model in value],
+          number=value.number,
+          has_previous=value.has_previous(),
+          previous_page_number=value.previous_page_number() if value.has_previous() else None,
+          has_next=value.has_next(),
+          next_page_number=value.next_page_number() if value.has_next() else None,
+          start_index=value.start_index(),
+          end_index=value.end_index(),
+          paginator=dict(num_pages=value.paginator.num_pages, count=value.paginator.count, per_page=value.paginator.per_page)
+      )
+
+    return super().default(value)
+```
+
+In our Vue page we get a page_obj object as prop to use it on our components
+
+```js
+// Dashboard.vue <script> section
+const props = defineProps({
+	routes: Array, // we get this from shared_data middelware
+	user: Object, // we get this from shared_data middelware
+	page_obj: Object,
+});
+
+const pagination = {
+	has_previous: props.page_obj.has_previous,
+	previous_page_number: props.page_obj.previous_page_number,
+	active_page: props.page_obj.number,
+	has_next: props.page_obj.has_next,
+	next_page_number: props.page_obj.next_page_number,
+	start_index: props.page_obj.start_index,
+	end_index: props.page_obj.end_index,
+	num_pages: props.page_obj.paginator.num_pages,
+	per_page: props.page_obj.paginator.per_page,
+	count: props.page_obj.paginator.count,
+};
+```
+
+```js
+// Dashboard.vue <template> section
+
+
+<TableRow v-for="(user, index) in page_obj.object_list" :key="index">
+    <TableCell>
+        <div class="flex items-center text-sm">
+        <Avatar class="hidden mr-3 md:block" :src="user.avatar" alt="User image" />
+        <div>
+            <p class="font-semibold">{{ user.name }}</p>
+            <p class="text-xs text-gray-600 dark:text-gray-400">{{ user.job }}</p>
+        </div>
+        </div>
+    </TableCell>
+    <TableCell>
+        <span class="text-sm">$ {{ user.amount }}</span>
+    </TableCell>
+    <TableCell>
+        <Badge :type="user.status">{{ user.status }}</Badge>
+    </TableCell>
+    <TableCell>
+        <span class="text-sm">{{ user.date }}</span>
+    </TableCell>
+</TableRow>
+
+// and
+
+<TableFooter>
+    <Pagination v-bind="pagination" />
+</TableFooter>
+```

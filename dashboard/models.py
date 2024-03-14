@@ -16,7 +16,9 @@ class Client(models.Model):
     job = models.CharField(max_length=200)
     amount = models.FloatField()
     status = models.CharField(choices=STATUS_CHOICES, max_length=20)
-    date = models.DateTimeField() #if we add auto_now wil not be serialized on model_to_dict 
+    date = (
+        models.DateTimeField()
+    )  # if we add auto_now wil not be serialized on model_to_dict
 
     def __str__(self) -> str:
         return self.name
