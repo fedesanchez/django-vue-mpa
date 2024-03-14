@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator
+from django.http import HttpResponseRedirect
 from django.db.models import Sum
 from inertia import render
 from .models import Client
@@ -7,8 +8,7 @@ PAGINATE_BY = 10
 
 
 def index(request):
-    return render(request, "Dashboard", props={})
-
+    return HttpResponseRedirect("/app/dashboard")
 
 def dashboard(request):
     client_list = Client.objects.all()
